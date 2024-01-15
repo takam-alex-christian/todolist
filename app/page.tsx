@@ -1,31 +1,23 @@
 
+"use client"
+
 import { toDoContext } from "@/lib/todoContext";
 
+import { ToDoContianer } from "@/components/ToDoContainer";
 import { InputBar } from "@/components/InputBar";
 
 import { useReducer } from "react";
 
-
-type ToDo = {
-	id: string,
-	text: string,
-	completed: boolean,
-	creationDate: Date,
-	completetionDate: Date | null
-}
-
-type ToDoState = {
-	todos: Array<ToDo>
-}
+import {ToDoState, ToDoReducerActions} from "@/types"
 
 export default function Home() {
 
 	// fetch local todo list
 	// put it to context
 
-	function toDoReducer(prevState: ToDoState, action: {name: "added", payload: Omit<ToDo, "id">} | {name: "completed", payload: {id: string}} | {name: "deleted", payload: {id: string}}): ToDoState {
+	function toDoReducer(prevState: ToDoState, action: ToDoReducerActions ): ToDoState {
 
-		switch (action.name){
+		switch (action.type){
 			case "added":  return {...prevState, todos: [...prevState.todos, {...action.payload, id: Date.now().toString()}]}
 			case "completed": {
 				const foundToDo = prevState.todos.find(({id})=> id == action.payload.id? true : false)
@@ -39,24 +31,26 @@ export default function Home() {
 				
 				return {todos: prevState.todos.filter(({id})=> id !== action.payload.id)}
 			}
+			default: return prevState
 		}
-		return {} as ToDoState
 	}
 
+
+	//initial state
 	const initToDoState: ToDoState = {
 		todos: []
 	}
+
 
 	const [toDoState, toDoDispatch] = useReducer(toDoReducer, initToDoState)
 
 
 	return (
 		<toDoContext.Provider value={{ state: toDoState, dispatch: toDoDispatch }}>
-			<main>
-				<ToDOContianer />
+				<ToDoContianer />
 
 				<InputBar />
-			</main>
+
 		</toDoContext.Provider>
 	);
 }

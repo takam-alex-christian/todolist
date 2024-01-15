@@ -1,6 +1,6 @@
 
 
-function ToDOContianer() {
+function ToDoContianer() {
 
     return (
         <div>
@@ -8,3 +8,5 @@ function ToDOContianer() {
         </div>
     )
 }
+
+export {ToDoContianer}

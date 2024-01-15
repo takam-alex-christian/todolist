@@ -1,14 +1,16 @@
 
-import { createContext } from "react";
 
+import { createContext, Dispatch} from "react";
+
+import {ToDoState, ToDoReducerActions} from "@/types"
 
 
 const toDoContext = createContext<{
-    state: any,
-    dispatch: any
+    state: ToDoState,
+    dispatch: Dispatch<ToDoReducerActions>
 }>({
-    state: {},
-    dispatch: null
+    state: {todos: []},
+    dispatch: ()=>{}
 })
 
 export {toDoContext}
