@@ -1,25 +1,28 @@
 
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 
-import {Checkbox} from "@nextui-org/checkbox";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { ToDo } from "@/types";
+
 
 function ToDoItem(props: {
-    text: string
-}){
+    toDo: ToDo
+}) {
 
     const [isSelected, setSelectedState] = useState(false);
 
-    useEffect(()=>{
-        console.log("checkbox checked")
-    }, [isSelected])
-
     return (
-        <div>
-            <Checkbox onValueChange={(isSelected)=>{
-                setSelectedState(isSelected)
-            }} >{props.text}</Checkbox>
-        </div>
+        <Checkbox onValueChange={(isSelected) => {
+            setSelectedState(isSelected)
+        }} classNames={{label: "w-full"}} >
+            <Card>
+                <CardBody>
+                    {props.toDo.text}
+                </CardBody>
+            </Card>
+        </Checkbox>
     );
 }
 
-export {ToDoItem}
+export { ToDoItem }

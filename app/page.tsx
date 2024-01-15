@@ -6,7 +6,7 @@ import { toDoContext } from "@/lib/todoContext";
 import { ToDoContianer } from "@/components/ToDoContainer";
 import { InputBar } from "@/components/InputBar";
 
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 
 import {ToDoState, ToDoReducerActions} from "@/types"
 
@@ -44,6 +44,10 @@ export default function Home() {
 
 	const [toDoState, toDoDispatch] = useReducer(toDoReducer, initToDoState)
 
+	useEffect(()=>{
+		//todostate changes ? 
+		//save it to memory
+	}, [toDoState])
 
 	return (
 		<toDoContext.Provider value={{ state: toDoState, dispatch: toDoDispatch }}>
