@@ -1,51 +1,62 @@
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code"
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+
+import { toDoContext } from "@/lib/todoContext";
+
+import { InputBar } from "@/components/InputBar";
+
+import { useReducer } from "react";
+
+
+type ToDo = {
+	id: string,
+	text: string,
+	completed: boolean,
+	creationDate: Date,
+	completetionDate: Date | null
+}
+
+type ToDoState = {
+	todos: Array<ToDo>
+}
 
 export default function Home() {
+
+	// fetch local todo list
+	// put it to context
+
+	function toDoReducer(prevState: ToDoState, action: {name: "added", payload: Omit<ToDo, "id">} | {name: "completed", payload: {id: string}} | {name: "deleted", payload: {id: string}}): ToDoState {
+
+		switch (action.name){
+			case "added":  return {...prevState, todos: [...prevState.todos, {...action.payload, id: Date.now().toString()}]}
+			case "completed": {
+				const foundToDo = prevState.todos.find(({id})=> id == action.payload.id? true : false)
+
+				if (foundToDo) foundToDo.completed = true
+
+				return prevState
+			}
+			case "deleted": {
+				const foundToDo = prevState.todos.find(({id})=> id==action.payload.id? true: false)
+				
+				return {todos: prevState.todos.filter(({id})=> id !== action.payload.id)}
+			}
+		}
+		return {} as ToDoState
+	}
+
+	const initToDoState: ToDoState = {
+		todos: []
+	}
+
+	const [toDoState, toDoDispatch] = useReducer(toDoReducer, initToDoState)
+
+
 	return (
-		<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-			<div className="inline-block max-w-lg text-center justify-center">
-				<h1 className={title()}>Make&nbsp;</h1>
-				<h1 className={title({ color: "violet" })}>beautiful&nbsp;</h1>
-				<br />
-				<h1 className={title()}>
-					websites regardless of your design experience.
-				</h1>
-				<h2 className={subtitle({ class: "mt-4" })}>
-					Beautiful, fast and modern React UI library.
-				</h2>
-			</div>
+		<toDoContext.Provider value={{ state: toDoState, dispatch: toDoDispatch }}>
+			<main>
+				<ToDOContianer />
 
-			<div className="flex gap-3">
-				<Link
-					isExternal
-					href={siteConfig.links.docs}
-					className={buttonStyles({ color: "primary", radius: "full", variant: "shadow" })}
-				>
-					Documentation
-				</Link>
-				<Link
-					isExternal
-					className={buttonStyles({ variant: "bordered", radius: "full" })}
-					href={siteConfig.links.github}
-				>
-					<GithubIcon size={20} />
-					GitHub
-				</Link>
-			</div>
-
-			<div className="mt-8">
-				<Snippet hideSymbol hideCopyButton variant="flat">
-					<span>
-						Get started by editing <Code color="primary">app/page.tsx</Code>
-					</span>
-				</Snippet>
-			</div>
-		</section>
+				<InputBar />
+			</main>
+		</toDoContext.Provider>
 	);
 }
