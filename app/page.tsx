@@ -14,22 +14,36 @@ export default function Home() {
 
 	// fetch local todo list
 	// put it to context
+	function updateStoredState(toDoState: ToDoState){
+		if (toDoState.todos.length != 0) localStorage.setItem("toDoState", JSON.stringify(toDoState))
+	}
 
 	function toDoReducer(prevState: ToDoState, action: ToDoReducerActions ): ToDoState {
 
 		switch (action.type){
-			case "added":  return {...prevState, todos: [...prevState.todos, {...action.payload, id: Date.now().toString()}]}
+			case "added":  {
+				const newState = {...prevState, todos: [...prevState.todos, {...action.payload, id: Date.now().toString()}]}
+				
+				updateStoredState(newState)
+
+				return newState
+			}
 			case "completed": {
 				const foundToDo = prevState.todos.find(({id})=> id == action.payload.id? true : false)
 
 				if (foundToDo) foundToDo.completed = true
-
+				
+				updateStoredState(prevState)
+				
 				return prevState
 			}
 			case "deleted": {
-				const foundToDo = prevState.todos.find(({id})=> id==action.payload.id? true: false)
+
+				const newState = {todos: prevState.todos.filter(({id})=> id !== action.payload.id)}
+
+				updateStoredState(newState)
 				
-				return {todos: prevState.todos.filter(({id})=> id !== action.payload.id)}
+				return newState
 			}
 			case "initialized": {
 				return action.payload
@@ -53,10 +67,6 @@ export default function Home() {
 		if (storedToDoState)  toDoDispatch({type: "initialized", payload: JSON.parse(storedToDoState)})
 
 	}, [])
-
-	useEffect(()=>{
-		if (toDoState.todos.length != 0) localStorage.setItem("toDoState", JSON.stringify(toDoState));
-	}, [toDoState])
 
 	return (
 		<toDoContext.Provider value={{ state: toDoState, dispatch: toDoDispatch }}>
