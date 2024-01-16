@@ -12,16 +12,18 @@ function ToDoItem(props: {
     toDo: ToDo
 }) {
 
-    const [isSelected, setSelectedState] = useState(false);
+    const [isCompleted, setCompleteState] = useState(props.toDo.completed)
+
     const {state: toDoState, dispatch: toDoDispatch} = useContext(toDoContext)
 
-    useEffect(()=>{
-
-    })
 
     return (
-        <Checkbox isSelected={props.toDo.completed} onValueChange={(isSelected) => {
-            setSelectedState(isSelected)
+        <Checkbox isSelected={isCompleted} onValueChange={(isCompleted) => {
+            
+            setCompleteState(true)
+
+            toDoDispatch({type: "completed", payload: {id: props.toDo.id}})
+
         }} classNames={{label: "w-full"}} >
             <Card>
                 <CardBody>
