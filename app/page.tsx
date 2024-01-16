@@ -31,26 +31,38 @@ export default function Home() {
 				
 				return {todos: prevState.todos.filter(({id})=> id !== action.payload.id)}
 			}
+			case "initialized": {
+				return action.payload
+			}
 			default: return prevState
 		}
 	}
 
 
 	//initial state
-	const initToDoState: ToDoState = {
+	let initToDoState: ToDoState = {
 		todos: []
 	}
-
 
 	const [toDoState, toDoDispatch] = useReducer(toDoReducer, initToDoState)
 
 	useEffect(()=>{
-		//todostate changes ? 
-		//save it to memory
+
+		const storedToDoState = localStorage.getItem("toDoState")
+
+		if (storedToDoState)  toDoDispatch({type: "initialized", payload: JSON.parse(storedToDoState)})
+
+	}, [])
+
+	useEffect(()=>{
+		if (toDoState.todos.length != 0) localStorage.setItem("toDoState", JSON.stringify(toDoState));
 	}, [toDoState])
 
 	return (
 		<toDoContext.Provider value={{ state: toDoState, dispatch: toDoDispatch }}>
+
+				<h1 className="pb-6 text-2xl font-light">ToDo</h1>
+
 				<ToDoContianer />
 
 				<InputBar />

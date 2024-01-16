@@ -1,5 +1,7 @@
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext} from "react"
+
+import { toDoContext } from "@/lib/todoContext";
 
 import { Checkbox } from "@nextui-org/checkbox";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
@@ -11,9 +13,14 @@ function ToDoItem(props: {
 }) {
 
     const [isSelected, setSelectedState] = useState(false);
+    const {state: toDoState, dispatch: toDoDispatch} = useContext(toDoContext)
+
+    useEffect(()=>{
+
+    })
 
     return (
-        <Checkbox onValueChange={(isSelected) => {
+        <Checkbox isSelected={props.toDo.completed} onValueChange={(isSelected) => {
             setSelectedState(isSelected)
         }} classNames={{label: "w-full"}} >
             <Card>

@@ -13,7 +13,10 @@ type ToDoState = {
 	todos: Array<ToDo>
 }
 
-type ToDoReducerActions = {type: "added", payload: Omit<ToDo, "id">} | {type: "completed", payload: {id: string}} | {type: "deleted", payload: {id: string}}
+type ToDoReducerActions = {type: "added", payload: Omit<ToDo, "id">} 
+						| {type: "completed", payload: {id: string}} 
+						| {type: "deleted", payload: {id: string}} 
+						| {type: "initialized", payload: ToDoState}
 
 
 export type {ToDo, ToDoState, ToDoReducerActions}
