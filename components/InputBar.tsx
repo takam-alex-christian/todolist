@@ -45,8 +45,8 @@ function InputBar() {
         <div className="absolute bottom-4 w-full ">
             <form onSubmit={toDoSubmit}>
                 <div className="flex flex-row gap-4 items-center" >
-                    <Input autoComplete="off" value={formState.toDoValue} onValueChange={(value)=>{setFormState((prevState)=>{return {...prevState, toDoValue: value}})}} placeholder="What will you HOPEFULLY do ? " isDisabled={formState.status == 0} />
-                    <Button type="submit" size="lg" color="primary" variant="shadow" isDisabled={formState.toDoValue.length==0} isLoading={formState.status == 0? true: false }>{formState.status != 0? "Add" : null}</Button>
+                    <Input autoComplete="off" value={formState.toDoValue} onValueChange={(value)=>{setFormState((prevState)=>{return {...prevState, toDoValue: value}})}} placeholder="What will you HOPEFULLY do ? " isDisabled={formState.status == 0 || toDoState.todos.length == 8} />
+                    <Button type="submit" size="lg" color="primary" variant="shadow" isDisabled={formState.toDoValue.length==0 || toDoState.todos.length == 8} isLoading={formState.status == 0? true: false }>{formState.status != 0? "Add" : null}</Button>
                 </div>
 
             </form>
